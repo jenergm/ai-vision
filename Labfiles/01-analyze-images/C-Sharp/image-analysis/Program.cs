@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Azure;
 
 // Import namespaces
+using Azure.AI.Vision.ImageAnalysis;
 
 namespace image_analysis
 {
@@ -34,8 +35,10 @@ namespace image_analysis
                 }
 
                 // Authenticate Azure AI Vision client
+                ImageAnalysisClient client = new ImageAnalysisClient(
+                    new Uri(aiSvcEndpoint),
+                    new AzureKeyCredential(aiSvcKey));
 
-                
                 // Analyze image
                 AnalyzeImage(imageFile, client);
 
@@ -58,16 +61,42 @@ namespace image_analysis
                                                      FileMode.Open);
 
             // Get result with specified features to be retrieved
-            
-            
+            ImageAnalysisResult result = client.Analyze(
+                BinaryData.FromStream(stream),
+                VisualFeatures.Caption |
+                VisualFeatures.DenseCaptions |
+                VisualFeatures.Objects |
+                VisualFeatures.Tags |
+                VisualFeatures.People);
+
             // Display analysis results
-            
+            // Get image captions
+            if (result.Caption.Text != null)
+            {
+                Console.WriteLine(" Caption:");
+                Console.WriteLine($"   \"{result.Caption.Text}\", Confidence {result.Caption.Confidence:0.00}\n");
+            }
+
+            // Get image dense captions
+            Console.WriteLine(" Dense Captions:");
+            foreach (DenseCaption denseCaption in result.DenseCaptions.Values)
+            {
+                Console.WriteLine($"   Caption: '{denseCaption.Text}', Confidence: {denseCaption.Confidence:0.00}");
+            }
+
+            // Get image tags
+
+
+            // Get objects in the image
+
+
+            // Get people in the image
 
         }
         static async Task BackgroundForeground(string imageFile, string endpoint, string key)
         {
             // Remove the background from the image or generate a foreground matte
-            
+
         }
     }
 }
