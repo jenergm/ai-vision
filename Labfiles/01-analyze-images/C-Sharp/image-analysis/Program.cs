@@ -28,7 +28,9 @@ namespace image_analysis
                 string aiSvcKey = configuration["AIServicesKey"];
 
                 // Get image
-                string imageFile = "images/street.jpg";
+                // string imageFile = "images/street.jpg";
+                // string imageFile = "images/building.jpg";
+                string imageFile = "images/person.jpg";
                 if (args.Length > 0)
                 {
                     imageFile = args[0];
