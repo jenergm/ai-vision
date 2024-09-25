@@ -87,7 +87,14 @@ namespace image_analysis
             }
 
             // Get image tags
-
+            if (result.Tags.Values.Count > 0)
+            {
+                Console.WriteLine($"\n Tags:");
+                foreach (DetectedTag tag in result.Tags.Values)
+                {
+                    Console.WriteLine($"   '{tag.Name}', Confidence: {tag.Confidence:F2}");
+                }
+            }
 
             // Get objects in the image
 
