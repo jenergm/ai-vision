@@ -121,12 +121,39 @@ namespace image_analysis
                 }
 
                 // Save annotated image
-                String output_file = "street-analysed.jpg";
+                String output_file = "person-analysed.jpg";
                 image.Save($"images/{output_file}");
                 Console.WriteLine("  Results saved in " + output_file + "\n");
             }
 
             // Get people in the image
+            if (result.People.Values.Count > 0)
+            {
+                Console.WriteLine($" People:");
+
+                // Prepare image for drawing
+                System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
+                Graphics graphics = Graphics.FromImage(image);
+                Pen pen = new Pen(Color.Cyan, 3);
+                Font font = new Font("Arial", 16);
+                SolidBrush brush = new SolidBrush(Color.WhiteSmoke);
+
+                foreach (DetectedPerson person in result.People.Values)
+                {
+                    // Draw object bounding box
+                    var r = person.BoundingBox;
+                    Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
+                    graphics.DrawRectangle(pen, rect);
+
+                    // Return the confidence of the person detected
+                    //Console.WriteLine($"   Bounding box {person.BoundingBox.ToString()}, Confidence: {person.Confidence:F2}");
+                }
+
+                // Save annotated image
+                String output_file = "street-persons-detected.jpg";
+                image.Save($"images/{output_file}");
+                Console.WriteLine("  Results saved in " + output_file + "\n");
+            }
 
         }
         static async Task BackgroundForeground(string imageFile, string endpoint, string key)
